@@ -1788,3 +1788,54 @@ header.hero aside.methodological-note.hero__note .note-icon,
     grid-template-columns: 1fr !important;
   }
 }
+
+/* =========================================================
+   HOTFIX EXPLORACIÓN SECUNDARIA
+   Evita desbordes en gráficos dentro del acordeón
+========================================================= */
+
+#exploracion .accordion {
+  overflow: hidden !important;
+}
+
+#exploracion .accordion__content {
+  padding: 1.5rem !important;
+  padding-top: 0 !important;
+}
+
+/* En esta sección, una columna es más legible que dos */
+#exploracion .charts-two-col {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 1.75rem !important;
+  width: 100% !important;
+}
+
+#exploracion .chart-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  padding: 1.75rem !important;
+}
+
+#exploracion .chart-container {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 430px !important;
+  overflow: hidden !important;
+}
+
+/* Evita que los SVG internos de Plotly se salgan visualmente */
+#exploracion .js-plotly-plot,
+#exploracion .plot-container,
+#exploracion .svg-container {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Títulos algo más compactos para esta sección */
+#exploracion .chart-subtitle {
+  font-size: 0.9rem !important;
+  line-height: 1.35 !important;
+  margin-bottom: 1rem !important;
+}

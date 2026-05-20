@@ -920,7 +920,28 @@ function initApp() {
     },
   });
 }
+/* =========================================================
+   Resize de Plotly al abrir la exploración secundaria
+   Necesario porque los gráficos dentro de <details> pueden
+   calcular mal el ancho si se renderizan estando ocultos.
+========================================================= */
 
+const secondaryAccordion = document.querySelector("#exploracion details");
+
+if (secondaryAccordion) {
+  secondaryAccordion.addEventListener("toggle", () => {
+    if (secondaryAccordion.open) {
+      setTimeout(() => {
+        ["chart-makes", "chart-flight-types"].forEach((chartId) => {
+          const chart = document.getElementById(chartId);
+          if (chart) {
+            Plotly.Plots.resize(chart);
+          }
+        });
+      }, 150);
+    }
+  });
+}
 /* ─────────────────────────────────────────────────────────────
    ARRANQUE
 ───────────────────────────────────────────────────────────── */
