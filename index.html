@@ -1,37 +1,477 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patrones de incidentes de aviación en Estados Unidos, 1978–2015</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Visualización interactiva de 100.000 incidentes de aviación registrados por la FAA entre 1978 y 2015. Análisis de evolución temporal, distribución geográfica, fases de vuelo y severidad." />
+  <title>Incidentes de Aviación FAA · 1978–2015</title>
 
-    <link rel="stylesheet" href="css/styles.css">
-
-    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- Plotly.js -->
+  <script src="[cdn.plot.ly](https://cdn.plot.ly/plotly-2.30.0.min.js)" defer></script>
+  <!-- PapaParse -->
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js)" defer></script>
+  <!-- App -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/app.js" defer></script>
 </head>
+
 <body>
-    <main>
-        <section class="hero">
-            <p class="eyebrow">FAA / ASIAS · 1978–2015</p>
-            <h1>Patrones de incidentes de aviación en Estados Unidos, 1978–2015</h1>
-            <p>
-                Visualización interactiva de 100.000 incidentes registrados por la FAA según su evolución temporal,
-                distribución territorial, fase de vuelo y severidad.
-            </p>
-            <p class="method-note">
-                Esta visualización muestra volumen de incidentes registrados, no tasas de riesgo.
-            </p>
-        </section>
 
-        <section class="placeholder">
-            <h2>Web base creada correctamente</h2>
-            <p>
-                Sustituye este archivo por el <code>index.html</code> definitivo generado para la visualización.
-            </p>
-        </section>
-    </main>
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════ -->
+  <header class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__badge">FAA / ASIAS · Datos abiertos</div>
+      <h1 class="hero__title">Patrones de incidentes de aviación<br>en Estados Unidos</h1>
+      <p class="hero__subtitle">
+        Una exploración interactiva de aproximadamente 100.000 incidentes registrados por la FAA
+        según su evolución temporal, distribución territorial, fase de vuelo y severidad.
+      </p>
+      <p class="hero__period">1978 – 2015</p>
 
-    <script src="js/app.js"></script>
+      <!-- Tarjetas resumen -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-value" id="kpi-total">~100.000</span>
+          <span class="kpi-label">incidentes registrados</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-value">37</span>
+          <span class="kpi-label">años de datos</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-value">64</span>
+          <span class="kpi-label">códigos territoriales</span>
+        </div>
+        <div class="kpi-card kpi-card--alert">
+          <span class="kpi-value" id="kpi-fatal">773</span>
+          <span class="kpi-label">incidentes con fatalidades</span>
+        </div>
+        <div class="kpi-card kpi-card--highlight">
+          <span class="kpi-value">58,7 %</span>
+          <span class="kpi-label">en aproximación / aterrizaje</span>
+        </div>
+      </div>
+
+      <!-- Nota metodológica -->
+      <aside class="methodological-note hero__note" role="note" aria-label="Nota metodológica principal">
+        <span class="note-icon" aria-hidden="true">⚠</span>
+        <p>
+          <strong>Nota metodológica:</strong> esta visualización muestra el <em>volumen de incidentes registrados</em>,
+          no tasas de riesgo. El dataset no incluye el número total de vuelos u operaciones por año,
+          estado o fase de vuelo, por lo que los resultados <strong>no deben interpretarse como
+          probabilidades de incidente ni como peligrosidad relativa</strong>.
+        </p>
+      </aside>
+
+      <a href="#evolucion" class="hero__scroll-cta" aria-label="Ir al análisis">
+        Explorar el análisis
+        <span class="hero__arrow" aria-hidden="true">↓</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       LAYOUT PRINCIPAL: Sidebar + Contenido
+  ════════════════════════════════════════════ -->
+  <div class="page-layout">
+
+    <!-- FILTROS SIDEBAR -->
+    <aside class="filters-sidebar" id="filters-panel" aria-label="Panel de filtros">
+      <div class="filters-header">
+        <h2 class="filters-title">Filtros</h2>
+        <button class="btn-reset" id="btn-reset" aria-label="Restablecer todos los filtros">
+          Restablecer
+        </button>
+      </div>
+
+      <!-- Loading indicator -->
+      <div class="filters-loading" id="filters-loading" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <span>Cargando datos…</span>
+      </div>
+
+      <div class="filters-body" id="filters-body" aria-hidden="true">
+
+        <!-- Filtro: Década -->
+        <fieldset class="filter-group">
+          <legend class="filter-label">Década</legend>
+          <div class="filter-options" role="group">
+            <label class="filter-option">
+              <input type="radio" name="decade" value="all" checked />
+              <span>Todas</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="decade" value="1970s" />
+              <span>1970s</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="decade" value="1980s" />
+              <span>1980s</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="decade" value="1990s" />
+              <span>1990s</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="decade" value="2000s" />
+              <span>2000s</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="decade" value="2010s" />
+              <span>2010s</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Filtro: Severidad -->
+        <fieldset class="filter-group">
+          <legend class="filter-label">Severidad</legend>
+          <div class="filter-options" role="group">
+            <label class="filter-option">
+              <input type="radio" name="severity" value="all" checked />
+              <span>Todas</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="severity" value="Fatal" />
+              <span>Con fatalidades</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="severity" value="Injuries" />
+              <span>Con lesiones</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="severity" value="Severe aircraft damage" />
+              <span>Daño severo en aeronave</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="severity" value="Minor/no known damage" />
+              <span>Daño menor o no conocido</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="severity" value="Unknown" />
+              <span>Desconocido</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Filtro: Fase de vuelo -->
+        <fieldset class="filter-group">
+          <legend class="filter-label">Fase de vuelo</legend>
+          <div class="filter-options" role="group">
+            <label class="filter-option">
+              <input type="radio" name="phase" value="all" checked />
+              <span>Todas</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="phase" value="Approach/landing" />
+              <span>Aproximación / aterrizaje</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="phase" value="Ground/taxi" />
+              <span>Suelo / rodaje</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="phase" value="Cruise/descent" />
+              <span>Crucero / descenso</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="phase" value="Takeoff/climb" />
+              <span>Despegue / ascenso</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="phase" value="Maneuver/other flight" />
+              <span>Maniobras / otros vuelos</span>
+            </label>
+            <label class="filter-option">
+              <input type="radio" name="phase" value="Other/unknown" />
+              <span>Otros / desconocido</span>
+            </label>
+          </div>
+        </fieldset>
+
+      </div><!-- /filters-body -->
+    </aside><!-- /filters-sidebar -->
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content" id="main-content">
+
+      <!-- Mensaje sin resultados (oculto por defecto) -->
+      <div class="empty-state" id="empty-state" aria-live="assertive" hidden>
+        <span class="empty-icon" aria-hidden="true">✈</span>
+        <h2>Sin registros para esta combinación de filtros</h2>
+        <p>Prueba a cambiar o restablecer los filtros para ver datos.</p>
+        <button class="btn-reset-alt" id="btn-reset-empty">Restablecer filtros</button>
+      </div>
+
+      <!-- ─── SECCIÓN 1: EVOLUCIÓN TEMPORAL ─── -->
+      <section class="viz-section" id="evolucion" aria-labelledby="evolucion-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">01</div>
+          <div class="section-header__text">
+            <h2 id="evolucion-title" class="section-title">Evolución temporal de los registros</h2>
+            <p class="section-description">
+              Los registros muestran una reducción general del volumen de incidentes entre finales
+              de los años setenta y 2015. Esta evolución describe el comportamiento de los
+              <em>registros administrativos</em>, no una tasa real de riesgo aéreo.
+            </p>
+          </div>
+        </div>
+        <div class="chart-card reveal">
+          <div id="chart-temporal" class="chart-container" aria-label="Gráfico de línea: evolución anual de incidentes registrados"></div>
+        </div>
+      </section>
+
+      <!-- ─── SECCIÓN 2: DISTRIBUCIÓN GEOGRÁFICA ─── -->
+      <section class="viz-section" id="geografia" aria-labelledby="geografia-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">02</div>
+          <div class="section-header__text">
+            <h2 id="geografia-title" class="section-title">Distribución geográfica</h2>
+            <p class="section-description">
+              California, Texas y Florida concentran el mayor volumen de registros en términos
+              absolutos. Esta distribución refleja también el volumen de actividad aérea en cada
+              territorio, que no es homogéneo.
+            </p>
+          </div>
+        </div>
+
+        <aside class="methodological-note reveal" role="note">
+          <span class="note-icon" aria-hidden="true">ℹ</span>
+          <p>
+            El mapa representa <strong>conteos absolutos</strong> de incidentes registrados.
+            No mide riesgo por estado porque no se dispone del número total de vuelos
+            u operaciones en cada territorio.
+          </p>
+        </aside>
+
+        <div class="chart-card reveal">
+          <div id="chart-map" class="chart-container chart-container--tall" aria-label="Mapa coroplético de incidentes registrados por estado de EE. UU."></div>
+        </div>
+
+        <div class="chart-card reveal">
+          <h3 class="chart-subtitle">Top 15 territorios por número de incidentes registrados</h3>
+          <div id="chart-states-bar" class="chart-container" aria-label="Gráfico de barras horizontales: top 15 estados por incidentes registrados"></div>
+        </div>
+      </section>
+
+      <!-- ─── SECCIÓN 3: FASES DE VUELO ─── -->
+      <section class="viz-section" id="fases" aria-labelledby="fases-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">03</div>
+          <div class="section-header__text">
+            <h2 id="fases-title" class="section-title">Incidentes por fase de vuelo</h2>
+            <p class="section-description">
+              La aproximación y el aterrizaje concentran el mayor volumen de incidentes registrados.
+              Este patrón es uno de los más claros del conjunto de datos, aunque
+              <strong>no equivale a una tasa de riesgo por fase</strong>, ya que el número de
+              operaciones varía significativamente entre fases.
+            </p>
+          </div>
+        </div>
+        <div class="chart-card reveal">
+          <div id="chart-phases" class="chart-container" aria-label="Gráfico de barras horizontales: incidentes registrados por fase de vuelo"></div>
+        </div>
+      </section>
+
+      <!-- ─── SECCIÓN 4: SEVERIDAD ─── -->
+      <section class="viz-section" id="severidad" aria-labelledby="severidad-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">04</div>
+          <div class="section-header__text">
+            <h2 id="severidad-title" class="section-title">Severidad de los incidentes</h2>
+            <p class="section-description">
+              La mayoría de los registros corresponden a daños menores o de severidad desconocida.
+              Los incidentes con fatalidades o daños severos representan una fracción pequeña
+              del total registrado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tarjetas de severidad -->
+        <div class="severity-kpis reveal" id="severity-kpis" aria-label="Resumen de severidad">
+          <div class="sev-card sev-card--total">
+            <span class="sev-value" id="sev-total">—</span>
+            <span class="sev-label">Total filtrado</span>
+          </div>
+          <div class="sev-card sev-card--fatal">
+            <span class="sev-value" id="sev-fatal">—</span>
+            <span class="sev-label">Con fatalidades</span>
+          </div>
+          <div class="sev-card sev-card--injuries">
+            <span class="sev-value" id="sev-injuries">—</span>
+            <span class="sev-label">Con lesiones</span>
+          </div>
+          <div class="sev-card sev-card--severe">
+            <span class="sev-value" id="sev-severe">—</span>
+            <span class="sev-label">Daño severo</span>
+          </div>
+          <div class="sev-card sev-card--unknown">
+            <span class="sev-value" id="sev-unknown">—</span>
+            <span class="sev-label">Desconocido</span>
+          </div>
+        </div>
+
+        <div class="chart-card reveal">
+          <div class="chart-toggle-bar">
+            <span class="chart-toggle-label">Escala:</span>
+            <div class="toggle-group" role="group" aria-label="Escala del gráfico de severidad">
+              <button class="toggle-btn toggle-btn--active" id="sev-scale-linear" aria-pressed="true">Lineal</button>
+              <button class="toggle-btn" id="sev-scale-log" aria-pressed="false">Logarítmica</button>
+            </div>
+            <span class="chart-toggle-note" id="sev-scale-note"></span>
+          </div>
+          <div id="chart-severity" class="chart-container" aria-label="Gráfico de barras: distribución de incidentes por severidad"></div>
+        </div>
+      </section>
+
+      <!-- ─── SECCIÓN 5: FASE × SEVERIDAD ─── -->
+      <section class="viz-section" id="cruce" aria-labelledby="cruce-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">05</div>
+          <div class="section-header__text">
+            <h2 id="cruce-title" class="section-title">Fase de vuelo × severidad</h2>
+            <p class="section-description">
+              Las fases con mayor volumen de incidentes registrados <strong>no son necesariamente
+              las fases con mayor severidad relativa</strong>. La aproximación y el aterrizaje
+              acumulan muchos registros, pero en su mayoría son de daño menor. Las maniobras
+              y otros vuelos presentan menos volumen pero una proporción relativamente mayor
+              de fatalidades.
+            </p>
+          </div>
+        </div>
+        <div class="chart-card reveal">
+          <div class="chart-toggle-bar">
+            <span class="chart-toggle-label">Mostrar como:</span>
+            <div class="toggle-group" role="group" aria-label="Modo del mapa de calor">
+              <button class="toggle-btn toggle-btn--active" id="heatmap-pct" aria-pressed="true">% dentro de la fase</button>
+              <button class="toggle-btn" id="heatmap-abs" aria-pressed="false">Conteo absoluto</button>
+            </div>
+          </div>
+          <div id="chart-heatmap" class="chart-container chart-container--tall" aria-label="Mapa de calor: severidad por fase de vuelo"></div>
+        </div>
+      </section>
+
+      <!-- ─── SECCIÓN 6: EXPLORACIÓN SECUNDARIA ─── -->
+      <section class="viz-section" id="exploracion" aria-labelledby="exploracion-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">06</div>
+          <div class="section-header__text">
+            <h2 id="exploracion-title" class="section-title">Exploración adicional</h2>
+            <p class="section-description">
+              Análisis exploratorio complementario. Los datos presentados a continuación
+              tienen carácter exploratorio y deben interpretarse con cautela adicional.
+            </p>
+          </div>
+        </div>
+
+        <aside class="methodological-note methodological-note--warning reveal" role="note">
+          <span class="note-icon" aria-hidden="true">⚠</span>
+          <p>
+            Los gráficos de esta sección muestran <strong>frecuencia de registros</strong>,
+            no seguridad relativa por tipo de vuelo o fabricante. No se dispone de datos
+            de exposición (número de operaciones por fabricante o tipo de vuelo),
+            por lo que no pueden usarse para comparar niveles de seguridad.
+          </p>
+        </aside>
+
+        <details class="accordion reveal">
+          <summary class="accordion__trigger" aria-expanded="false">
+            Ver análisis por tipo de vuelo y fabricante
+            <span class="accordion__icon" aria-hidden="true">▾</span>
+          </summary>
+          <div class="accordion__content">
+            <div class="charts-two-col">
+              <div class="chart-card">
+                <h3 class="chart-subtitle">Top 10 fabricantes por incidentes registrados</h3>
+                <div id="chart-makes" class="chart-container" aria-label="Gráfico de barras: top 10 fabricantes de aeronaves por incidentes registrados"></div>
+              </div>
+              <div class="chart-card">
+                <h3 class="chart-subtitle">Top 10 tipos de vuelo por incidentes registrados</h3>
+                <div id="chart-flight-types" class="chart-container" aria-label="Gráfico de barras: top 10 tipos de vuelo por incidentes registrados"></div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- ─── SECCIÓN 7: CONCLUSIONES ─── -->
+      <section class="viz-section viz-section--conclusions" id="conclusiones" aria-labelledby="conclusiones-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">07</div>
+          <div class="section-header__text">
+            <h2 id="conclusiones-title" class="section-title">Conclusiones</h2>
+          </div>
+        </div>
+        <div class="conclusions-grid reveal">
+          <div class="conclusion-card">
+            <span class="conclusion-num" aria-hidden="true">1</span>
+            <p>Los incidentes registrados muestran una <strong>reducción general del volumen</strong> entre 1978 y 2015, con descensos pronunciados en los ochenta y noventa y una ralentización posterior.</p>
+          </div>
+          <div class="conclusion-card">
+            <span class="conclusion-num" aria-hidden="true">2</span>
+            <p>Algunos estados concentran más registros absolutos, especialmente <strong>California, Texas y Florida</strong>, patrón coherente con su mayor volumen de actividad aérea.</p>
+          </div>
+          <div class="conclusion-card">
+            <span class="conclusion-num" aria-hidden="true">3</span>
+            <p>La <strong>aproximación y el aterrizaje</strong> concentran el mayor volumen de incidentes registrados: más del 58 % del total.</p>
+          </div>
+          <div class="conclusion-card">
+            <span class="conclusion-num" aria-hidden="true">4</span>
+            <p>La mayoría de registros corresponden a <strong>daños menores o severidad desconocida</strong>. Los incidentes graves y fatales representan una fracción pequeña del total.</p>
+          </div>
+          <div class="conclusion-card">
+            <span class="conclusion-num" aria-hidden="true">5</span>
+            <p>El cruce entre fase y severidad muestra que <strong>mayor volumen no implica mayor severidad relativa</strong>: las maniobras presentan una proporción de fatalidades relativamente más alta con menos registros totales.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── SECCIÓN 8: LIMITACIONES ─── -->
+      <section class="viz-section viz-section--limitations" id="limitaciones" aria-labelledby="limitaciones-title">
+        <div class="section-header reveal">
+          <div class="section-number" aria-hidden="true">08</div>
+          <div class="section-header__text">
+            <h2 id="limitaciones-title" class="section-title">Limitaciones metodológicas</h2>
+          </div>
+        </div>
+        <ul class="limitations-list reveal" aria-label="Lista de limitaciones del análisis">
+          <li>El dataset recoge únicamente <strong>incidentes</strong>; todos los registros están clasificados como <code>INCIDENT</code> y no incluye accidentes comparados.</li>
+          <li>No existen <strong>denominadores de exposición</strong>: no hay datos del número total de vuelos, horas de vuelo u operaciones por año, estado o fase de vuelo.</li>
+          <li>Sin denominadores, <strong>no puede calcularse ni estimarse una tasa de riesgo real</strong>.</li>
+          <li>Algunas variables presentan <strong>valores perdidos o desconocidos</strong> relevantes, especialmente en severidad y fase de vuelo.</li>
+          <li>Los resultados por estado, fabricante o tipo de vuelo deben interpretarse exclusivamente como <strong>conteos absolutos de registros</strong>, no como indicadores de seguridad.</li>
+          <li>La reducción temporal en el volumen de registros puede reflejar <strong>cambios en los criterios de registro</strong>, no necesariamente mejoras reales en seguridad.</li>
+        </ul>
+      </section>
+
+    </main><!-- /main-content -->
+  </div><!-- /page-layout -->
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p>
+        Datos: <a href="[faa.gov](https://www.faa.gov/data_research/accident_incident/)" target="_blank" rel="noopener noreferrer">FAA Accident and Incident Data System (ASIAS)</a> ·
+        Periodo: 1978–2015
+      </p>
+      <p>
+        Visualización realizada con
+        <a href="[plotly.com](https://plotly.com/javascript/)" target="_blank" rel="noopener noreferrer">Plotly.js</a> y
+        <a href="[papaparse.com](https://www.papaparse.com/)" target="_blank" rel="noopener noreferrer">PapaParse</a> ·
+        Código bajo licencia <a href="LICENSE" target="_blank">MIT</a>
+      </p>
+      <p class="footer-small">
+        Práctica de visualización de datos · Análisis exploratorio, no análisis de riesgo operacional.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Botón volver arriba -->
+  <button class="back-to-top" id="back-to-top" aria-label="Volver al inicio de la página" hidden>
+    ↑
+  </button>
+
 </body>
 </html>
