@@ -234,6 +234,37 @@ function renderKPIs(data) {
   document.getElementById('sev-unknown').textContent = fmt(unknown);
 }
 
+function renderSeverityShare(data) {
+  const bar = document.getElementById('severity-share-bar');
+  const legend = document.getElementById('severity-share-legend');
+  if (!bar || !legend) return;
+
+  const sevMap = aggregateBySeverity(data);
+  const total = data.length || 1;
+
+  bar.innerHTML = '';
+  legend.innerHTML = '';
+
+  for (const sev of SEVERITY_ORDER) {
+    const value = sevMap[sev] || 0;
+    const percentage = (value / total) * 100;
+    const label = SEVERITY_LABELS[sev] || sev;
+    const color = SEV_COLORS[sev] || '#94a3b8';
+
+    const segment = document.createElement('div');
+    segment.className = 'severity-share__segment';
+    segment.style.width = `${percentage}%`;
+    segment.style.background = color;
+    segment.title = `${label}: ${fmt(value)} (${percentage.toFixed(1).replace('.', ',')} %)`;
+    bar.appendChild(segment);
+
+    const item = document.createElement('span');
+    item.className = 'severity-share__item';
+    item.innerHTML = `<span class="severity-share__swatch" style="background:${color}"></span>${label}: <strong>${percentage.toFixed(1).replace('.', ',')} %</strong>`;
+    legend.appendChild(item);
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────
    RENDER: EVOLUCIÓN TEMPORAL
 ───────────────────────────────────────────────────────────── */
@@ -346,7 +377,7 @@ function renderMap(data) {
       bgcolor: 'rgba(0,0,0,0)',
     },
     margin: { t: 0, r: 0, b: 0, l: 0 },
-    height: 420,
+    height: 500,
   };
 
   Plotly.react('chart-map', [trace], layout, PLOTLY_CONFIG);
@@ -413,7 +444,7 @@ function renderStatesBar(data) {
       color: '#374151',
       tickfont: { size: 12, color: '#374151' },
     },
-    height: 420,
+    height: 470,
     bargap: 0.3,
   };
 
@@ -470,7 +501,7 @@ function renderPhases(data) {
       tickfont: { size: 12 },
       automargin: true,
     },
-    height: 340,
+    height: 420,
     bargap: 0.35,
   };
 
@@ -522,7 +553,7 @@ function renderSeverity(data) {
       color: '#6b7280',
       tickfont: { size: 11 },
     },
-    height: 340,
+    height: 420,
     bargap: 0.4,
   };
 
@@ -627,7 +658,7 @@ function renderHeatmap(data) {
       tickfont: { size: 11 },
       automargin: true,
     },
-    height: 400,
+    height: 520,
   };
 
   Plotly.react('chart-heatmap', [trace], layout, PLOTLY_CONFIG);
@@ -706,6 +737,7 @@ function renderAll() {
     .forEach(s => { s.style.opacity = isEmpty ? '0.2' : '1'; });
 
   renderKPIs(data);
+  renderSeverityShare(data);
   renderTemporal(data);
   renderMap(data);
   renderStatesBar(data);

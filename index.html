@@ -23,7 +23,7 @@
   <header class="hero" id="top">
     <div class="hero__inner">
       <div class="hero__badge">FAA / ASIAS · Datos abiertos</div>
-      <h1 class="hero__title">Patrones de incidentes de aviación<br>en Estados Unidos</h1>
+      <h1 class="hero__title">Patrones de incidentes de aviación<br><span>en Estados Unidos</span></h1>
       <p class="hero__subtitle">
         Una exploración interactiva de aproximadamente 100.000 incidentes registrados por la FAA
         según su evolución temporal, distribución territorial, fase de vuelo y severidad.
@@ -64,6 +64,14 @@
           probabilidades de incidente ni como peligrosidad relativa</strong>.
         </p>
       </aside>
+
+      <nav class="hero__route" aria-label="Estructura narrativa de la visualización">
+        <a href="#evolucion">Tiempo</a>
+        <a href="#geografia">Territorio</a>
+        <a href="#fases">Fases</a>
+        <a href="#severidad">Severidad</a>
+        <a href="#cruce">Cruce analítico</a>
+      </nav>
 
       <a href="#evolucion" class="hero__scroll-cta" aria-label="Ir al análisis">
         Explorar el análisis
@@ -218,9 +226,15 @@
             </p>
           </div>
         </div>
+        <aside class="insight-card insight-card--blue reveal" role="note">
+          <span class="insight-card__label">Hallazgo clave</span>
+          <p>El volumen anual de incidentes registrados cae de forma general entre 1978 y 2015, aunque esta lectura no equivale a una tasa de riesgo.</p>
+        </aside>
+
         <div class="chart-card reveal">
-          <div id="chart-temporal" class="chart-container" aria-label="Gráfico de línea: evolución anual de incidentes registrados"></div>
+          <div id="chart-temporal" class="chart-container chart-container--wide" aria-label="Gráfico de línea: evolución anual de incidentes registrados"></div>
         </div>
+        <p class="chart-reading reveal"><strong>Lectura:</strong> la tendencia temporal ayuda a contextualizar el dataset, pero no permite afirmar que el riesgo real haya disminuido porque no conocemos el número total de vuelos por año.</p>
       </section>
 
       <!-- ─── SECCIÓN 2: DISTRIBUCIÓN GEOGRÁFICA ─── -->
@@ -236,6 +250,11 @@
             </p>
           </div>
         </div>
+
+        <aside class="insight-card insight-card--map reveal" role="note">
+          <span class="insight-card__label">Hallazgo clave</span>
+          <p>California, Texas y Florida aparecen como los territorios con más registros absolutos, pero el mapa no mide peligrosidad territorial.</p>
+        </aside>
 
         <aside class="methodological-note reveal" role="note">
           <span class="note-icon" aria-hidden="true">ℹ</span>
@@ -254,6 +273,7 @@
           <h3 class="chart-subtitle">Top 15 territorios por número de incidentes registrados</h3>
           <div id="chart-states-bar" class="chart-container" aria-label="Gráfico de barras horizontales: top 15 estados por incidentes registrados"></div>
         </div>
+        <p class="chart-reading reveal"><strong>Lectura:</strong> la dimensión geográfica muestra concentración de registros, no proporción de incidentes por vuelo ni riesgo por estado.</p>
       </section>
 
       <!-- ─── SECCIÓN 3: FASES DE VUELO ─── -->
@@ -270,9 +290,15 @@
             </p>
           </div>
         </div>
+        <aside class="insight-card insight-card--phase reveal" role="note">
+          <span class="insight-card__label">Hallazgo clave</span>
+          <p>Aproximación y aterrizaje concentran el 58,7 % de los incidentes registrados, el patrón más claro de la visualización.</p>
+        </aside>
+
         <div class="chart-card reveal">
           <div id="chart-phases" class="chart-container" aria-label="Gráfico de barras horizontales: incidentes registrados por fase de vuelo"></div>
         </div>
+        <p class="chart-reading reveal"><strong>Lectura:</strong> el gráfico identifica dónde se acumulan más registros, pero no puede comparar riesgo entre fases sin conocer el número de operaciones en cada una.</p>
       </section>
 
       <!-- ─── SECCIÓN 4: SEVERIDAD ─── -->
@@ -288,6 +314,11 @@
             </p>
           </div>
         </div>
+
+        <aside class="insight-card insight-card--severity reveal" role="note">
+          <span class="insight-card__label">Hallazgo clave</span>
+          <p>La mayor parte de los registros se concentra en daños menores o severidad desconocida; los eventos con fatalidades son una fracción pequeña del total.</p>
+        </aside>
 
         <!-- Tarjetas de severidad -->
         <div class="severity-kpis reveal" id="severity-kpis" aria-label="Resumen de severidad">
@@ -313,6 +344,15 @@
           </div>
         </div>
 
+        <div class="severity-share reveal" aria-label="Distribución proporcional de severidad">
+          <div class="severity-share__header">
+            <span>Distribución proporcional del subconjunto filtrado</span>
+            <small>Anchura de cada segmento = porcentaje sobre el total filtrado</small>
+          </div>
+          <div class="severity-share__bar" id="severity-share-bar"></div>
+          <div class="severity-share__legend" id="severity-share-legend"></div>
+        </div>
+
         <div class="chart-card reveal">
           <div class="chart-toggle-bar">
             <span class="chart-toggle-label">Escala:</span>
@@ -324,10 +364,11 @@
           </div>
           <div id="chart-severity" class="chart-container" aria-label="Gráfico de barras: distribución de incidentes por severidad"></div>
         </div>
+        <p class="chart-reading reveal"><strong>Lectura:</strong> la escala lineal muestra el peso dominante de los incidentes leves o desconocidos; la escala logarítmica ayuda a ver las categorías pequeñas sin cambiar los datos.</p>
       </section>
 
       <!-- ─── SECCIÓN 5: FASE × SEVERIDAD ─── -->
-      <section class="viz-section" id="cruce" aria-labelledby="cruce-title">
+      <section class="viz-section viz-section--matrix" id="cruce" aria-labelledby="cruce-title">
         <div class="section-header reveal">
           <div class="section-number" aria-hidden="true">05</div>
           <div class="section-header__text">
@@ -341,6 +382,10 @@
             </p>
           </div>
         </div>
+        <aside class="insight-card insight-card--matrix reveal" role="note">
+          <span class="insight-card__label">Hallazgo clave</span>
+          <p>El análisis cruzado separa dos ideas distintas: dónde hay más registros y dónde la severidad relativa pesa más.</p>
+        </aside>
         <div class="chart-card reveal">
           <div class="chart-toggle-bar">
             <span class="chart-toggle-label">Mostrar como:</span>
@@ -351,6 +396,7 @@
           </div>
           <div id="chart-heatmap" class="chart-container chart-container--tall" aria-label="Mapa de calor: severidad por fase de vuelo"></div>
         </div>
+        <p class="chart-reading chart-reading--dark reveal"><strong>Lectura:</strong> cuando se cambia de conteos a porcentajes, se aprecia que las fases con menos registros pueden tener una severidad relativa mayor.</p>
       </section>
 
       <!-- ─── SECCIÓN 6: EXPLORACIÓN SECUNDARIA ─── -->
