@@ -1668,10 +1668,10 @@ header.hero aside.methodological-note.hero__note .note-icon,
 }
 
 .kpi-value {
-  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  font-size: clamp(1.9rem, 3.2vw, 3rem);
   line-height: 1;
   white-space: nowrap;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.06em;
 }
 
 @media (max-width: 1200px) {
