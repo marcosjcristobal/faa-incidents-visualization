@@ -1661,27 +1661,83 @@ header.hero aside.methodological-note.hero__note .note-icon,
   }
 }
 
-/* HOTFIX FINAL: evitar desbordes/cortes en KPIs de severidad */
+/* =========================================================
+   HOTFIX DEFINITIVO KPIs: HERO + SEVERIDAD
+   Evita cortes y desbordamientos en números grandes
+========================================================= */
+
+/* ---------- KPIs DEL HERO ---------- */
+
+.hero .kpi-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 1rem !important;
+}
+
+.hero .kpi-card {
+  min-width: 0 !important;
+  overflow: visible !important;
+  padding: 1.25rem 1rem !important;
+}
+
+/* La primera tarjeta necesita más ancho por el 100.000 */
+.hero .kpi-card:first-child {
+  grid-column: span 2 !important;
+}
+
+.hero .kpi-card .kpi-value {
+  display: block !important;
+  max-width: 100% !important;
+  font-size: clamp(2rem, 3.2vw, 3.1rem) !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.07em !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+/* El 100.000 del hero queda algo más compacto */
+.hero .kpi-card:first-child .kpi-value {
+  font-size: clamp(2.2rem, 3.4vw, 3.25rem) !important;
+  letter-spacing: -0.09em !important;
+}
+
+.hero .kpi-card .kpi-label {
+  margin-top: 0.65rem !important;
+  font-size: 0.82rem !important;
+  line-height: 1.25 !important;
+}
+
+
+/* ---------- KPIs DE SEVERIDAD ---------- */
+
 .severity-kpis {
+  display: grid !important;
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   gap: 1rem !important;
 }
 
 .severity-kpis .sev-card {
   min-width: 0 !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   padding: 1.25rem 1rem !important;
 }
 
 .severity-kpis .sev-value {
   display: block !important;
   max-width: 100% !important;
-  font-size: clamp(2.1rem, 3.7vw, 3rem) !important;
+  font-size: clamp(2rem, 3vw, 2.8rem) !important;
   line-height: 0.95 !important;
   letter-spacing: -0.08em !important;
   white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: clip !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+/* El total filtrado tiene más dígitos, así que va más compacto */
+.severity-kpis .sev-card:first-child .sev-value {
+  font-size: clamp(1.85rem, 2.6vw, 2.35rem) !important;
+  letter-spacing: -0.11em !important;
 }
 
 .severity-kpis .sev-label {
@@ -1690,47 +1746,44 @@ header.hero aside.methodological-note.hero__note .note-icon,
   line-height: 1.25 !important;
 }
 
-/* Ajuste específico para la primera tarjeta: Total filtrado */
-.severity-kpis .sev-card:first-child {
-  padding-left: 0.9rem !important;
-  padding-right: 0.65rem !important;
-  overflow: visible !important;
-}
 
-.severity-kpis .sev-card:first-child .sev-value {
-  font-size: 2.15rem !important;
-  line-height: 0.95 !important;
-  letter-spacing: -0.13em !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-  max-width: none !important;
-}
+/* ---------- RESPONSIVE ---------- */
 
-/* En pantallas medias, evitar que las 5 tarjetas se aplasten */
 @media (max-width: 1200px) {
+  .hero .kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .hero .kpi-card:first-child {
+    grid-column: span 1 !important;
+  }
+
+  .hero .kpi-card .kpi-value {
+    font-size: clamp(2rem, 5vw, 3rem) !important;
+  }
+
+  .hero .kpi-card:first-child .kpi-value {
+    font-size: clamp(1.95rem, 4.6vw, 2.8rem) !important;
+  }
+
   .severity-kpis {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 
-  .severity-kpis .sev-value {
-    font-size: clamp(2.1rem, 6vw, 3.2rem) !important;
-  }
-
   .severity-kpis .sev-card:first-child .sev-value {
-    font-size: 2.45rem !important;
-    letter-spacing: -0.11em !important;
+    font-size: clamp(2rem, 5vw, 2.8rem) !important;
   }
 }
 
-/* En móvil */
 @media (max-width: 700px) {
+  .hero .kpi-grid,
   .severity-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
 @media (max-width: 460px) {
+  .hero .kpi-grid,
   .severity-kpis {
     grid-template-columns: 1fr !important;
   }
