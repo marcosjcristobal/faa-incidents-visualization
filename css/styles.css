@@ -1340,3 +1340,122 @@ body {
 @media (max-width: 480px) {
   .kpi-grid, .severity-kpis { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════
+   FIX LEGIBILIDAD HERO + LIMITACIONES
+   Añadido tras revisión visual en GitHub Pages
+════════════════════════════════════════════════ */
+
+/* La nota metodológica del hero usa fondo claro: el texto debe ser oscuro y muy legible. */
+.methodological-note.hero__note {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(147, 197, 253, 0.75);
+  border-left: 5px solid var(--blue-400);
+  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.methodological-note.hero__note p {
+  color: #0f172a;
+  font-weight: 500;
+  text-shadow: none;
+}
+
+.methodological-note.hero__note strong {
+  color: #0a1628;
+  font-weight: 800;
+}
+
+.methodological-note.hero__note em {
+  color: var(--blue-700);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.methodological-note.hero__note .note-icon {
+  color: var(--blue-700);
+  font-weight: 800;
+}
+
+/* Mejor lectura para la sección de limitaciones: el texto NO debe comportarse como varios flex-items. */
+.viz-section--limitations {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
+  border: 1px solid #dbeafe;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-10);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+}
+
+.viz-section--limitations .section-header {
+  margin-bottom: var(--space-6);
+}
+
+.viz-section--limitations .section-number {
+  color: #bfdbfe;
+}
+
+.limitations-list {
+  gap: var(--space-4);
+}
+
+.limitations-list li {
+  position: relative;
+  display: block;
+  padding: var(--space-5) var(--space-6) var(--space-5) 3.4rem;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #dbe3ef;
+  border-radius: var(--radius-lg);
+  color: #172033;
+  font-size: var(--text-base);
+  line-height: 1.75;
+  letter-spacing: 0;
+  word-spacing: normal;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.055);
+}
+
+.limitations-list li::before {
+  content: '';
+  position: absolute;
+  left: 1.35rem;
+  top: 1.85rem;
+  width: 16px;
+  height: 3px;
+  background: var(--blue-500);
+  border-radius: 999px;
+}
+
+.limitations-list li strong {
+  display: inline;
+  color: #0a1628;
+  font-weight: 800;
+}
+
+.limitations-list li code {
+  display: inline-block;
+  margin: 0 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  background: #eef2f7;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  padding: 0.12rem 0.4rem;
+  border-radius: 0.35rem;
+  vertical-align: baseline;
+}
+
+@media (max-width: 768px) {
+  .viz-section--limitations {
+    padding: var(--space-6) var(--space-4);
+    border-radius: var(--radius-xl);
+  }
+
+  .limitations-list li {
+    padding: var(--space-4) var(--space-4) var(--space-4) 2.75rem;
+    font-size: var(--text-sm);
+  }
+
+  .limitations-list li::before {
+    left: 1rem;
+    top: 1.55rem;
+  }
+}
