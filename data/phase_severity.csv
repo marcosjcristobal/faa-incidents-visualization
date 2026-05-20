@@ -1,0 +1,36 @@
+flight_phase_group,severity_level,n_incidents
+Approach/landing,Fatal,50
+Approach/landing,Injuries,833
+Approach/landing,Minor/no known damage,44768
+Approach/landing,Severe aircraft damage,1062
+Approach/landing,Unknown,11957
+Cruise/descent,Fatal,217
+Cruise/descent,Injuries,661
+Cruise/descent,Minor/no known damage,4321
+Cruise/descent,Severe aircraft damage,187
+Cruise/descent,Unknown,7514
+Ground/taxi,Fatal,74
+Ground/taxi,Injuries,482
+Ground/taxi,Minor/no known damage,11168
+Ground/taxi,Severe aircraft damage,1052
+Ground/taxi,Unknown,2580
+Maneuver/other flight,Fatal,356
+Maneuver/other flight,Injuries,121
+Maneuver/other flight,Minor/no known damage,1256
+Maneuver/other flight,Severe aircraft damage,60
+Maneuver/other flight,Unknown,693
+Other/unknown,Fatal,50
+Other/unknown,Injuries,51
+Other/unknown,Minor/no known damage,297
+Other/unknown,Severe aircraft damage,42
+Other/unknown,Unknown,106
+Takeoff/climb,Fatal,21
+Takeoff/climb,Injuries,184
+Takeoff/climb,Minor/no known damage,4781
+Takeoff/climb,Severe aircraft damage,247
+Takeoff/climb,Unknown,4567
+Unknown,Fatal,5
+Unknown,Injuries,17
+Unknown,Minor/no known damage,137
+Unknown,Severe aircraft damage,28
+Unknown,Unknown,55

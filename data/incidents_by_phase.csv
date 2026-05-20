@@ -1,0 +1,8 @@
+flight_phase_group,n_incidents
+Approach/landing,58670
+Ground/taxi,15356
+Cruise/descent,12900
+Takeoff/climb,9800
+Maneuver/other flight,2486
+Other/unknown,546
+Unknown,242
