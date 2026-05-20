@@ -1459,3 +1459,204 @@ body {
     top: 1.55rem;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   HOTFIX FINAL DE LEGIBILIDAD Y HERO
+   20/05/2026
+════════════════════════════════════════════════ */
+
+/* 1) Nota metodológica del hero: contraste real, sin texto blanco sobre fondo claro */
+header.hero aside.methodological-note.hero__note,
+.hero .methodological-note.hero__note,
+.methodological-note.hero__note {
+  background: #ffffff !important;
+  border: 1px solid rgba(147, 197, 253, 0.85) !important;
+  border-left: 6px solid #60a5fa !important;
+  border-radius: 0.85rem !important;
+  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.18) !important;
+  backdrop-filter: none !important;
+}
+
+header.hero aside.methodological-note.hero__note p,
+.hero .methodological-note.hero__note p,
+.methodological-note.hero__note p {
+  color: #0f172a !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+header.hero aside.methodological-note.hero__note strong,
+.hero .methodological-note.hero__note strong,
+.methodological-note.hero__note strong {
+  color: #0a1628 !important;
+  font-weight: 850 !important;
+  opacity: 1 !important;
+}
+
+header.hero aside.methodological-note.hero__note em,
+.hero .methodological-note.hero__note em,
+.methodological-note.hero__note em {
+  color: #1d4ed8 !important;
+  font-style: normal !important;
+  font-weight: 850 !important;
+  opacity: 1 !important;
+}
+
+header.hero aside.methodological-note.hero__note .note-icon,
+.hero .methodological-note.hero__note .note-icon,
+.methodological-note.hero__note .note-icon {
+  color: #1d4ed8 !important;
+  opacity: 1 !important;
+}
+
+/* 2) Quitar bordes rojos/azules agresivos de las dos últimas KPI del hero */
+.hero .kpi-card,
+.hero .kpi-card.kpi-card--alert,
+.hero .kpi-card.kpi-card--highlight {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 18px 55px rgba(0,0,0,0.13) !important;
+}
+
+.hero .kpi-card.kpi-card--alert,
+.hero .kpi-card.kpi-card--highlight {
+  background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.045)) !important;
+}
+
+/* 3) Navegación superior del hero: que no parezcan enlaces por defecto */
+.hero__route {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.55rem !important;
+  margin: 1.7rem 0 0.9rem !important;
+  padding: 0 !important;
+}
+
+.hero__route a,
+.hero__route a:visited,
+.hero__route a:link {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 2.25rem !important;
+  padding: 0.48rem 0.82rem !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(147, 197, 253, 0.42) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  color: #dbeafe !important;
+  text-decoration: none !important;
+  font-size: 0.82rem !important;
+  line-height: 1 !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.015em !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.hero__route a:hover,
+.hero__route a:focus-visible {
+  background: rgba(96, 165, 250, 0.22) !important;
+  border-color: rgba(147, 197, 253, 0.75) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 4) Separar mejor la llamada principal */
+.hero__scroll-cta,
+.hero__scroll-cta:visited,
+.hero__scroll-cta:link {
+  margin-top: 0.35rem !important;
+  color: #60a5fa !important;
+  text-decoration: none !important;
+}
+
+.hero__scroll-cta:hover {
+  color: #bfdbfe !important;
+}
+
+/* 5) Limitaciones: texto fluido y sin cortes raros */
+.viz-section--limitations {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%) !important;
+  border: 1px solid #dbeafe !important;
+  border-radius: 1.5rem !important;
+  padding: 2.5rem !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06) !important;
+}
+
+.limitations-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.limitations-list li {
+  position: relative !important;
+  display: block !important;
+  padding: 1.15rem 1.35rem 1.15rem 3.2rem !important;
+  background: #ffffff !important;
+  border: 1px solid #dbe3ef !important;
+  border-radius: 0.85rem !important;
+  color: #172033 !important;
+  font-size: 1rem !important;
+  line-height: 1.75 !important;
+  letter-spacing: 0 !important;
+  word-spacing: normal !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.055) !important;
+}
+
+.limitations-list li::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 1.25rem !important;
+  top: 1.75rem !important;
+  width: 16px !important;
+  height: 3px !important;
+  background: #3b82f6 !important;
+  border-radius: 999px !important;
+}
+
+.limitations-list li strong {
+  display: inline !important;
+  color: #0a1628 !important;
+  font-weight: 850 !important;
+}
+
+.limitations-list li code {
+  display: inline-block !important;
+  margin: 0 0.15rem !important;
+  color: #0f172a !important;
+  background: #eef2f7 !important;
+  border: 1px solid #e2e8f0 !important;
+  padding: 0.12rem 0.4rem !important;
+  border-radius: 0.35rem !important;
+  vertical-align: baseline !important;
+}
+
+@media (max-width: 768px) {
+  .hero__route {
+    display: flex !important;
+  }
+
+  .hero__route a {
+    font-size: 0.76rem !important;
+    padding: 0.45rem 0.68rem !important;
+  }
+
+  .viz-section--limitations {
+    padding: 1.25rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .limitations-list li {
+    padding: 1rem 1rem 1rem 2.65rem !important;
+    font-size: 0.92rem !important;
+  }
+
+  .limitations-list li::before {
+    left: 1rem !important;
+    top: 1.45rem !important;
+  }
+}
