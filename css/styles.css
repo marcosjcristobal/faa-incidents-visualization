@@ -1661,53 +1661,61 @@ header.hero aside.methodological-note.hero__note .note-icon,
   }
 }
 
-/* HOTFIX KPI DEFINITIVO: primera tarjeta más ancha */
-.hero .kpi-grid {
-  grid-template-columns: 1.55fr repeat(4, minmax(0, 1fr)) !important;
+/* HOTFIX DEFINITIVO: KPIs de severidad sin desbordamiento */
+.severity-kpis {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   gap: 1rem !important;
 }
 
-.hero .kpi-card {
+.severity-kpis .sev-card {
   min-width: 0 !important;
   overflow: hidden !important;
+  padding: 1.25rem 1rem !important;
 }
 
-.hero .kpi-card:first-child {
-  min-width: 250px !important;
-}
-
-.hero .kpi-card:first-child .kpi-value {
-  font-size: clamp(2.4rem, 4vw, 3.25rem) !important;
+.severity-kpis .sev-value {
+  display: block !important;
+  max-width: 100% !important;
+  font-size: clamp(2.1rem, 3.7vw, 3rem) !important;
+  line-height: 0.95 !important;
   letter-spacing: -0.08em !important;
   white-space: nowrap !important;
-  line-height: 0.95 !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
 }
 
-.hero .kpi-value {
-  white-space: nowrap !important;
+.severity-kpis .sev-label {
+  margin-top: 0.55rem !important;
+  font-size: 0.82rem !important;
+  line-height: 1.25 !important;
 }
 
-/* En pantallas medias, pasamos a 3 columnas para que no se comprima */
-@media (max-width: 1100px) {
-  .hero .kpi-grid {
+/* En pantallas medias, evitar que 5 tarjetas se aplasten */
+@media (max-width: 1200px) {
+  .severity-kpis {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 
-  .hero .kpi-card:first-child {
-    min-width: 0 !important;
+  .severity-kpis .sev-value {
+    font-size: clamp(2.1rem, 6vw, 3.2rem) !important;
   }
 }
 
-/* En móvil, 2 columnas */
+/* En móvil */
 @media (max-width: 700px) {
-  .hero .kpi-grid {
+  .severity-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
-/* En móvil estrecho, 1 columna */
 @media (max-width: 460px) {
-  .hero .kpi-grid {
+  .severity-kpis {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* Primera tarjeta de severidad: total filtrado */
+.severity-kpis .sev-card:first-child .sev-value {
+  font-size: clamp(1.9rem, 3.2vw, 2.65rem) !important;
+  letter-spacing: -0.09em !important;
 }
