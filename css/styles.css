@@ -1660,3 +1660,28 @@ header.hero aside.methodological-note.hero__note .note-icon,
     top: 1.45rem !important;
   }
 }
+
+/* HOTFIX KPI: evitar que 100.000 se salga de la tarjeta */
+.kpi-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.kpi-value {
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.04em;
+}
+
+@media (max-width: 1200px) {
+  .kpi-value {
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-value {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+}
