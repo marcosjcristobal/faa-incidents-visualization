@@ -65,14 +65,14 @@ faa-incidents-visualization/
 
 ```bash
 # 1. Clonar o descargar el repositorio
-git clone [github.com](https://github.com/TU_USUARIO/faa-incidents-visualization.git)
+git clone https://github.com/TU_USUARIO/faa-incidents-visualization.git
 cd faa-incidents-visualization
 
 # 2. Iniciar servidor local
 python -m http.server 8000
 
 # 3. Abrir en el navegador
-# [localhost](http://localhost:8000)
+# http://localhost:8000
 ```
 
 > **Importante:** la aplicación no puede abrirse directamente con `file://` porque PapaParse necesita un servidor HTTP para leer archivos CSV. Usa siempre el servidor Python o equivalente.
@@ -88,7 +88,7 @@ git init
 git add .
 git commit -m "Initial commit: FAA incidents visualization"
 git branch -M main
-git remote add origin [github.com](https://github.com/TU_USUARIO/faa-incidents-visualization.git)
+git remote add origin https://github.com/TU_USUARIO/faa-incidents-visualization.git
 git push -u origin main
 
 # 3. Activar GitHub Pages
@@ -99,7 +99,7 @@ git push -u origin main
 ```
 
 La visualización estará disponible en:
-`[tu_usuario.github.io](https://TU_USUARIO.github.io/faa-incidents-visualization/)`
+`https://TU_USUARIO.github.io/faa-incidents-visualization/`
 
 ---
 
